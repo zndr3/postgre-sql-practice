@@ -47,3 +47,68 @@ def cross_join_products_and_categories():
         FROM testproducts tp
         CROSS JOIN categories c
         """, engine)
+
+def union_products_and_testproducts():
+    return pd.read_sql("""
+        SELECT product_id, product_name
+        FROM products
+        UNION
+        SELECT testproduct_id, product_name
+        FROM testproducts
+        ORDER BY product_id;
+        """, engine)
+
+def union_all_products_and_testproducts():
+    return pd.read_sql("""
+        SELECT product_id, product_name
+        FROM products
+        UNION ALL
+        SELECT testproduct_id, product_name
+        FROM testproducts
+        ORDER BY product_id;
+        """, engine)
+
+def inner_join_customer_names_with_orders():
+    return pd.read_sql("""
+        SELECT c.customer_name AS "Customer Names", p.product_name AS "Ordered Products"
+        FROM products p
+        INNER JOIN order_details od
+        ON od.product_id = p.product_id
+        INNER JOIN orders o
+        ON od.order_id = o.order_id
+        INNER JOIN customers c
+        ON o.customer_id = c.customer_id;
+        """, engine)
+
+def total_bill_per_customer():
+    return pd.read_sql("""
+        SELECT c.customer_name AS "Customer Names", p.product_name AS "Product Name",
+        p.unit AS "Product Unit", p.price AS "Product Price", od.quantity,
+        SUM(p.price * od.quantity) AS "Total Bill"
+        FROM products p
+        INNER JOIN order_details od
+        ON od.product_id = p.product_id
+        INNER JOIN orders o
+        ON od.order_id = o.order_id
+        INNER JOIN customers c
+        ON o.customer_id = c.customer_id
+        GROUP BY c.customer_name, p.product_name, p.unit, p.price, od.quantity
+        ORDER BY c.customer_name;
+        """, engine)
+
+def bill_above_1000():
+    return pd.read_sql("""
+        SELECT c.customer_name AS "Customer Names", p.product_name AS "Product Name",
+        p.unit AS "Product Unit", p.price AS "Product Price", od.quantity,
+        SUM(p.price * od.quantity) AS "Total Bill"
+        FROM products p
+        INNER JOIN order_details od
+        ON od.product_id = p.product_id
+        INNER JOIN orders o
+        ON od.order_id = o.order_id
+        INNER JOIN customers c
+        ON o.customer_id = c.customer_id
+        GROUP BY c.customer_name, p.product_name, p.unit, p.price, od.quantity
+        HAVING SUM(p.price * od.quantity) >= 1000
+        ORDER BY c.customer_name;
+        """, engine)
