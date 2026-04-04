@@ -20,3 +20,9 @@ print(get_people_that_recommended())
 
 print("\nMember and Recommended By:")
 print(get_member_and_recommended_by())
+
+# print("\nWho Used Tennis Court:")
+# print(get_who_used_tennis_court())
+
+print("\nMember, Facility, and Cost on Date:")
+print(get_member_facility_costs_on_date())

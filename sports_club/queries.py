@@ -56,3 +56,37 @@ def get_member_and_recommended_by():
         ON member.recommendedby = reco.memid
         ORDER BY member.surname, member.firstname
         """, engine)
+
+# def get_who_used_tennis_court():
+#     return pd.read_sql("""
+#         SELECT DISTINCT m.firstname ||' '|| m.surname AS member, f.name AS facility
+#         FROM cd.members m
+#         INNER JOIN cd.bookings b 
+#         ON b.memid = m.memid
+#         INNER JOIN cd.facilities f
+#         ON b.facid = f.facid
+#         WHERE f.name LIKE 'Tennis Court%'
+#         ORDER BY member
+#         """, engine)
+
+def get_member_facility_costs_on_date():
+    return pd.read_sql("""
+        SELECT m.firstname ||' '|| m.surname AS member, f.name AS facility,
+        CASE
+            WHEN m.memid = 0 THEN b.slots * f.guestcost
+        ELSE
+            b.slots * f.membercost
+        END AS "cost"
+        FROM cd.members m
+        INNER JOIN cd.bookings b 
+        ON b.memid = m.memid
+        INNER JOIN cd.facilities f
+        ON b.facid = f.facid
+        WHERE b.starttime::date = '2012-09-14' AND 
+        (CASE
+            WHEN m.memid = 0 THEN b.slots * f.guestcost
+        ELSE
+            b.slots * f.membercost
+        END) > 30
+        ORDER BY cost DESC
+        """, engine)
