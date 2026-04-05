@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from config import *
 
 def get_engine():
@@ -11,3 +11,12 @@ def get_engine():
 
     url = f"postgresql+psycopg2://{user}:{password}@{host}:{port}/{dbname}"
     return create_engine(url)
+
+# Create a global engine instance to reuse
+engine = get_engine()
+
+def execute_change(sql_string):
+    """Handles INSERT, UPDATE, and DELETE with automatic commit."""
+    with engine.connect() as conn:
+        conn.execute(text(sql_string))
+        conn.commit()
