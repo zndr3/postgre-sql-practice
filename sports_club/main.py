@@ -1,5 +1,6 @@
 from get_queries import *
 from insert_queries import *
+from update_queries import *
 
 def get_queries():
     print("Facilities:")
@@ -38,7 +39,12 @@ def insert_queries():
     print("\nFacilities:")
     print(get_facilities())
 
+def update_queries():
+    update_initialoutlay()
+    print("Facilities:")
+    print(get_facilities())
 
 if __name__ == "__main__":
     # get_queries()
-    insert_queries()
+    # insert_queries()
+    update_queries()

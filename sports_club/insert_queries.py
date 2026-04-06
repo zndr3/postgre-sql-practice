@@ -17,3 +17,11 @@ def insert_2_new_facilities():
         ON CONFLICT (facid) DO NOTHING
         """
     execute_change(sql)
+
+def insert_auto_ID():
+    sql = """
+        INSERT INTO cd.facilities (facid, name, membercost, guestcost, initialoutlay, monthlymaintenance)
+        SELECT (SELECT MAX(facid) +1 FROM cd.facilities),  'Spa', 20, 30, 100000, 800;
+        """
+    execute_change(sql)
+
