@@ -30,6 +30,18 @@ def get_queries():
     print("\nMember and Recommender:")
     print(get_member_and_recommender())
 
+    print("\nFacilities Count:")
+    print(get_facilities_count())
+
+    print("\nFacilities with Costly Maintenance:")
+    print(get_count_guestcost_10())
+
+    print("\nMembers Who Recommended Others:")
+    print(get_count_recommendation_of_members())
+
+    print("\nTotal Slot per Facility:")
+    print(get_total_slot_per_facility())
+
 def insert_queries():
     insert_new_facility()
     print("Facilities:")
@@ -45,6 +57,6 @@ def update_queries():
     print(get_facilities())
 
 if __name__ == "__main__":
-    # get_queries()
+    get_queries()
     # insert_queries()
-    update_queries()
+    # update_queries()

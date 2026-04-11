@@ -90,3 +90,33 @@ def get_member_and_recommender():
         FROM cd.members m
         ORDER BY member
         """, engine)
+
+def get_facilities_count():
+    return pd.read_sql("""
+        SELECT COUNT(*) AS "count"
+        FROM cd.facilities
+        """, engine)
+
+def get_count_guestcost_10():
+    return pd.read_sql("""
+        SELECT COUNT(*) AS "count"
+        FROM cd.facilities
+        WHERE guestcost > 10
+        """, engine)    
+
+def get_count_recommendation_of_members():
+    return pd.read_sql("""
+        SELECT recommendedby, COUNT(memid) as "count"
+        FROM cd.members
+        WHERE recommendedby IS NOT NULL
+        GROUP BY recommendedby
+        ORDER BY recommendedby
+        """, engine)
+
+def get_total_slot_per_facility():
+    return pd.read_sql("""
+        SELECT facid, SUM(slots) AS "Total Slots"
+        FROM cd.bookings
+        GROUP BY facid
+        ORDER BY facid
+        """, engine)
