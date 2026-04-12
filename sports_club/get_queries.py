@@ -120,3 +120,58 @@ def get_total_slot_per_facility():
         GROUP BY facid
         ORDER BY facid
         """, engine)
+
+def get_total_slots_booked_per_facility_per_month():
+    return pd.read_sql("""
+        SELECT facid, EXTRACT(MONTH FROM starttime) AS month, SUM(slots) AS "Total Slots"
+        FROM cd.bookings
+        WHERE starttime::date >= '2012-01-01' AND starttime::date < '2013-01-01'
+        GROUP BY facid, month
+        ORDER BY facid, month ASC
+        """, engine)
+        # can also use
+        # where extract(year from starttime) = 2012
+
+def get_revenue_per_facility():
+    return pd.read_sql("""
+        SELECT name,
+        SUM(slots * CASE
+                        WHEN memid = 0 THEN f.guestcost
+                    ELSE
+                        f.membercost
+                    END) AS revenue
+        FROM cd.facilities f
+        INNER JOIN cd.bookings b
+        ON b.facid = f.facid
+        GROUP BY name
+        ORDER BY revenue
+        """, engine)
+
+def get_total_revenue_less_than_1000():
+    return pd.read_sql("""
+        SELECT name,
+        SUM(slots * CASE
+                        WHEN memid = 0 THEN f.guestcost
+                    ELSE
+                        f.membercost
+                    END) AS revenue
+        FROM cd.facilities f
+        INNER JOIN cd.bookings b
+        ON b.facid = f.facid
+        GROUP BY name
+        HAVING SUM(slots * CASE
+                        WHEN memid = 0 THEN f.guestcost
+                    ELSE
+                        f.membercost
+                    END) < 1000
+        ORDER BY revenue
+        """, engine)
+
+def get_highest_slots_booked():
+    return pd.read_sql("""
+        SELECT f.facid, SUM(slots) AS "Total Slots"
+        FROM cd.bookings f
+        GROUP BY f.facid
+        ORDER BY SUM(slots) DESC
+        LIMIT 1
+        """, engine)

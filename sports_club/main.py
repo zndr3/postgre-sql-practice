@@ -42,6 +42,18 @@ def get_queries():
     print("\nTotal Slot per Facility:")
     print(get_total_slot_per_facility())
 
+    print("\nTotal Slots Booked per Facility per Month:")
+    print(get_total_slots_booked_per_facility_per_month())
+
+    print("\nTotal Revenue per Facility:")
+    print(get_revenue_per_facility())
+
+    print("\nTotal Revenue per Facility less than 1000:")
+    print(get_total_revenue_less_than_1000())
+
+    print("\nHighest Slot Booked Facility:")
+    print(get_highest_slots_booked())
+
 def insert_queries():
     insert_new_facility()
     print("Facilities:")
