@@ -175,3 +175,50 @@ def get_highest_slots_booked():
         ORDER BY SUM(slots) DESC
         LIMIT 1
         """, engine)
+
+def get_total_slot_booked_per_facility_per_month():
+    return pd.read_sql("""
+        select facid, extract(month from starttime) as month, sum(slots) as slots
+        from cd.bookings
+            where
+                starttime >= '2012-01-01'
+                and starttime < '2013-01-01'
+            group by rollup(facid, month)
+        order by facid, month;   
+        """, engine)
+
+def get_total_hours_booked_per_facility():
+    return pd.read_sql("""
+        SELECT DISTINCT(f.facid), f.name, trim(to_char(sum(b.slots)/2.0, '999D99')) as "Total Hours"
+        FROM cd.bookings b
+        INNER JOIN cd.facilities f
+        ON b.facid = f.facid
+        GROUP BY f.facid , f.name
+        ORDER BY f.facid 
+        """, engine)
+
+def get_each_member_first_booking_date():
+    return pd.read_sql("""
+        SELECT m.surname, m.firstname, m.memid, MIN(b.starttime) AS starttime 
+        FROM cd.bookings b
+        INNER JOIN cd.members m
+        ON b.memid = m.memid
+        WHERE starttime >= '2012-09-01'
+        GROUP BY m.surname, m.firstname, m.memid
+        ORDER BY memid
+        """, engine)
+
+def get_member_count_with_list_of_members():
+    return pd.read_sql("""
+        SELECT COUNT(*) OVER(), firstname, surname
+        FROM cd.members
+        ORDER BY joindate
+        """, engine)
+    # use window function to get total count of members while still listing each member's name
+
+def get_numbered_list_of_members():
+    return pd.read_sql("""
+        SELECT row_number() OVER (ORDER BY joindate), firstname, surname
+        FROM cd.members 
+        """, engine)
+    # use window function to get a numbered list of members ordered by their join date

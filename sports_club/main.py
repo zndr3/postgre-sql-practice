@@ -54,6 +54,21 @@ def get_queries():
     print("\nHighest Slot Booked Facility:")
     print(get_highest_slots_booked())
 
+    print("\nTotal Slots Booked per Facility per Month:")
+    print(get_total_slot_booked_per_facility_per_month())
+
+    print("\nTotal Hours Booked per Facility per Month:")
+    print(get_total_hours_booked_per_facility())
+
+    print("\nEach Member's First Booking Date:")
+    print(get_each_member_first_booking_date())
+
+    print("\nTotal Member Count and List of Member Names:")
+    print(get_member_count_with_list_of_members())
+
+    print("\nNumbered List of Members:")
+    print(get_numbered_list_of_members())
+
 def insert_queries():
     insert_new_facility()
     print("Facilities:")
